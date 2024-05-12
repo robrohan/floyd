@@ -143,6 +143,7 @@ void watch_key_press()
     switch (c)
     {
     case CTRL_KEY('q'):
+    case CTRL_KEY('c'):
         // write(STDOUT_FILENO, "\x1b[2J", 4);
         // write(STDOUT_FILENO, "\x1b[H", 3);
         exit(0);
