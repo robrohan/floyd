@@ -17,7 +17,7 @@ build:
 release:
 	mkdir -p ./build
 
-	$(CC) -O3 ./src/audio.c ./src/log.c ./src/keyboard.c ./src/main.c \
+	$(CC) -O2 ./src/audio.c ./src/log.c ./src/keyboard.c ./src/main.c \
 	-I./vendor \
 	-I./src \
 	-o ./build/$(APP) -lm
