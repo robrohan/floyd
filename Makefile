@@ -1,14 +1,26 @@
 .PHONY: build
 
 CC=gcc
+APP=floyd
+
+clean:
+	rm -rf build
 
 build:
 	mkdir -p ./build
 
-	$(CC) -ggdb ./src/log.c ./src/keyboard.c ./src/main.c \
+	$(CC) -ggdb ./src/audio.c ./src/log.c ./src/keyboard.c ./src/main.c \
 	-I./vendor \
 	-I./src \
-	-o ./build/floyd -lm
+	-o ./build/$(APP).debug -lm
+
+release:
+	mkdir -p ./build
+
+	$(CC) -O3 ./src/audio.c ./src/log.c ./src/keyboard.c ./src/main.c \
+	-I./vendor \
+	-I./src \
+	-o ./build/$(APP) -lm
 
 run:
-	./build/floyd ./test_data/The\ Llama\'s.mp3
+	./build/floyd.debug ./test_data/The\ Llama\'s.mp3

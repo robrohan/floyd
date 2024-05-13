@@ -12,8 +12,33 @@
 
 #include "keyboard.h"
 #include "log.h"
+#include "audio.h"
 
 #define CTRL_KEY(k) ((k)&0x1F)
+
+#define CMD(key, func) { key, (void *)(func) },
+#define CMD_DEF_END { 0, NULL }
+
+typedef struct CmdDef {
+    char key;
+    void *func;
+} CmdDef;
+
+//////////////////////////////////////////////////
+void do_hello()
+{
+    printf("Hello there\n");
+}
+/////////////////////////////////////////////////
+
+CmdDef commands[] = 
+{
+    CMD( 'h', &do_hello )
+    CMD( 'p', &do_play_sound )
+    CMD( 's', &do_stop_sound )
+    CMD( 'r', &do_rewind_sound )
+    CMD_DEF_END,
+};
 
 struct termios org_termios;
 
@@ -137,26 +162,37 @@ int key_read()
     }
 }
 
-void watch_key_press()
+int watch_key_press()
 {
     int c = key_read();
+    CmdDef *d = commands;
+    while(d->func != NULL) 
+    {
+        if(d->key == c) 
+        {
+            void (*fn)() = d->func;
+            (*fn)();
+        }
+        d++;
+    }
+
     switch (c)
     {
     case CTRL_KEY('q'):
     case CTRL_KEY('c'):
-        // write(STDOUT_FILENO, "\x1b[2J", 4);
-        // write(STDOUT_FILENO, "\x1b[H", 3);
-        exit(0);
-        // break;
-    case HOME_KEY:
-    case END_KEY:
-    case DEL_KEY:
-    case PAGE_UP:
-    case PAGE_DOWN:
-    case ARROW_UP:
-    case ARROW_DOWN:
-    case ARROW_RIGHT:
-    case ARROW_LEFT:
-        printf("d'know");
+         return 0;
+    //     // break;
+    // case HOME_KEY:
+    // case END_KEY:
+    // case DEL_KEY:
+    // case PAGE_UP:
+    // case PAGE_DOWN:
+    // case ARROW_UP:
+    // case ARROW_DOWN:
+    // case ARROW_RIGHT:
+    // case ARROW_LEFT:
+    //     printf("d'know");
     }
+
+    return 1;
 }
