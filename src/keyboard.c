@@ -20,14 +20,14 @@
 #define CMD_DEF_END { 0, NULL }
 
 typedef struct CmdDef {
-    char key;
+    int key;
     void *func;
 } CmdDef;
 
 //////////////////////////////////////////////////
 void do_hello()
 {
-    printf("Hello there\n");
+    printf("Hello there\n\r");
 }
 /////////////////////////////////////////////////
 
@@ -36,9 +36,15 @@ CmdDef commands[] =
     CMD( 'h', &do_hello )
     CMD( 'p', &do_play_sound )
     CMD( 's', &do_stop_sound )
+    
     CMD( 'r', &do_rewind_sound )
+    CMD( HOME_KEY, &do_rewind_sound )
+    
     CMD( 'j', &do_seek_backward )
+    CMD( ARROW_LEFT, &do_seek_backward )
     CMD( ';', &do_seek_forward )
+    CMD( ARROW_RIGHT, &do_seek_forward )
+
     CMD_DEF_END,
 };
 
@@ -182,18 +188,8 @@ int watch_key_press()
     {
     case CTRL_KEY('q'):
     case CTRL_KEY('c'):
+    case 'q':
          return 0;
-    //     // break;
-    // case HOME_KEY:
-    // case END_KEY:
-    // case DEL_KEY:
-    // case PAGE_UP:
-    // case PAGE_DOWN:
-    // case ARROW_UP:
-    // case ARROW_DOWN:
-    // case ARROW_RIGHT:
-    // case ARROW_LEFT:
-    //     printf("d'know");
     }
 
     return 1;
