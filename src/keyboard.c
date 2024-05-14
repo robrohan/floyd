@@ -37,6 +37,8 @@ CmdDef commands[] =
     CMD( 'p', &do_play_sound )
     CMD( 's', &do_stop_sound )
     CMD( 'r', &do_rewind_sound )
+    CMD( 'j', &do_seek_backward )
+    CMD( ';', &do_seek_forward )
     CMD_DEF_END,
 };
 

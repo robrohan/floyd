@@ -1,8 +1,8 @@
+#include <errno.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <errno.h>
 
 void panic(int line_number, const char *format, ...)
 {

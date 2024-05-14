@@ -8,5 +8,7 @@ int play_sound();
 void do_play_sound();
 void do_stop_sound();
 void do_rewind_sound();
+void do_seek_backward();
+void do_seek_forward();
 
 #endif
