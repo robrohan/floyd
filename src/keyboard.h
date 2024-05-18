@@ -1,8 +1,6 @@
 #ifndef H_FLOYD_KEYBOARD
 #define H_FLOYD_KEYBOARD
 
-void enter_raw_mode();
-void exit_raw_mode();
 int watch_key_press();
 
 enum special_keys

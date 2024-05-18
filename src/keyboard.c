@@ -14,6 +14,9 @@
 #include "log.h"
 #include "audio.h"
 
+#include "tui.h"
+#include "termcui.h"
+
 #define CTRL_KEY(k) ((k)&0x1F)
 
 #define CMD(key, func) { key, (void *)(func) },
@@ -25,15 +28,15 @@ typedef struct CmdDef {
 } CmdDef;
 
 //////////////////////////////////////////////////
-void do_hello()
-{
-    printf("Hello there\n\r");
-}
+// void do_hello()
+// {
+//     printf("Hello there\n\r");
+// }
 /////////////////////////////////////////////////
 
 CmdDef commands[] = 
 {
-    CMD( 'h', &do_hello )
+    // CMD( 'h', &do_hello )
     CMD( 'p', &do_play_sound )
     CMD( 's', &do_stop_sound )
     
@@ -48,53 +51,16 @@ CmdDef commands[] =
     CMD_DEF_END,
 };
 
-struct termios org_termios;
-
-void exit_raw_mode()
-{
-    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &org_termios) == -1)
-    {
-        panic(__LINE__, "tcsetattr");
-    }
-}
-
-void enter_raw_mode()
-{
-    if (tcgetattr(STDIN_FILENO, &org_termios) == -1)
-    {
-        panic(__LINE__, "tcsetattr");
-    }
-    atexit(exit_raw_mode);
-
-    struct termios raw = org_termios;
-    // flag - IXON turns ctrl+s && ctrl+q software signals off
-    // flag - ICRNL turns ctrl+m carriage return off
-    raw.c_iflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
-    // flag - OPOST turns post-processing of output off
-    raw.c_oflag &= ~(OPOST);
-    raw.c_cflag |= (CS8);
-    // flag - ICANON turns canonical mode off
-    // flag - ISIG turns ctrl+c && ctrl+z signals off
-    raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
-    /* adding timeouts for read */
-    raw.c_cc[VMIN] = 0;
-    raw.c_cc[VTIME] = 1;
-
-    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1)
-    {
-        panic(__LINE__, "tcsetattr");
-    }
-}
-
 int key_read()
 {
     int nread;
     char c;
-    while ((nread = read(STDIN_FILENO, &c, 1)) != 1)
-    {
-        if (nread == -1 && errno != EAGAIN)
-            panic(__LINE__, "%i: read error", errno);
-    }
+    nread = read(STDIN_FILENO, &c, 1);
+    // while ((nread = read(STDIN_FILENO, &c, 1)) != 1)
+    // {
+    //     if (nread == -1 && errno != EAGAIN)
+    //         panic(__LINE__, "%i: read error", errno);
+    // }
 
     // handle escape sequences
     if (c == '\x1b')
@@ -174,7 +140,7 @@ int watch_key_press()
 {
     int c = key_read();
     CmdDef *d = commands;
-    while(d->func != NULL) 
+    while(d->func != NULL)
     {
         if(d->key == c) 
         {
@@ -191,6 +157,5 @@ int watch_key_press()
     case 'q':
          return 0;
     }
-
     return 1;
 }

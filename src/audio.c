@@ -1,8 +1,11 @@
+#include <stdio.h>
+#include <math.h>
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
-
 #include "keyboard.h"
-#include <stdio.h>
+#include "termcui.h"
+#include "tui.h"
+#include "audio.h"
 
 ma_engine g_engine;
 ma_sound g_sound;
@@ -63,9 +66,15 @@ void data_callback(ma_device *pDevice, void *pOutput, const void *pInput, ma_uin
     // printf("%i\n\r", g_current_frame);
 }
 
+void stop_engine()
+{
+    ma_engine_uninit(&g_engine);
+    ma_sound_uninit(&g_sound);
+    ma_device_uninit(&g_device);
+}
+
 int start_engine(const char *file_path)
 {
-
     ma_result result;
     ma_context context;
     ma_resource_manager resource_manager;
@@ -131,14 +140,47 @@ int start_engine(const char *file_path)
     }
 
     enter_raw_mode();
-    while (watch_key_press())
+    printf(ESC_HIDE_CURSOR);
+    int end = sound_frame_length(g_sound);
+    char progress_bar[50];
+    while (1)
     {
+        if(!watch_key_press()) 
+        {
+            break;
+        }
+        if(ma_sound_at_end(&g_sound)) {
+            break;
+        }
+        if (g_current_frame >= end)
+        {
+            do_stop_sound();
+            break;
+        }
+        // Dodgy UI
+        int percent = (int)round(((float)g_current_frame / (float)end)*100);
+        printf(ESC_ERASE_LINE);
+        for(int i=0; i<50; i++)
+        {
+            if(i < (percent/2)) 
+            {
+                progress_bar[i] = '*';
+            }
+            else
+            {
+                progress_bar[i] = ' ';
+            }
+        }
+        printf("%3d%% [%s]\n", percent, progress_bar);
+        printf(ESC_CURSOR_UP, 1);
+        printf(ESC_CURSOR_BACKWARD, 57);
+        //
     }
 
 cleanup:
-    ma_engine_uninit(&g_engine);
-    ma_sound_uninit(&g_sound);
-    ma_device_uninit(&g_device);
+    printf(ESC_ERASE_LINE);
+    printf(ESC_SHOW_CURSOR);
+    stop_engine();
     exit_raw_mode();
 
     return NO_ERROR;
@@ -189,7 +231,7 @@ void do_seek_forward()
         ma_sound_seek_to_pcm_frame(&g_sound, seek_frame);
         g_current_frame = seek_frame;
     }
-    if (g_current_frame < end)
+    if (g_current_frame < end-1000)
     {
         do_play_sound();
     }

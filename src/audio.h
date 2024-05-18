@@ -3,6 +3,7 @@
 
 int load_sound(const char * file_path);
 int start_engine(const char* file_path);
+void stop_engine();
 int play_sound();
 
 void do_play_sound();
