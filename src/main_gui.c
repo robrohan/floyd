@@ -21,13 +21,14 @@ int main(int argc, char **args) {
   settings.video.graphics.opengl.minorVersion = 3;
 
   if (fplPlatformInit(fplInitFlags_Video, &settings)) {
+    
     // Event/Main loop
     while (fplWindowUpdate()) {
       // Poll events
       fplEvent ev;
       while (fplPollEvent(&ev)) {
         /// ...
-        if(ev.keyboard.keyCode > 7 && ev.keyboard.keyCode < 255) {
+        if(ev.keyboard.keyCode >= 32 && ev.keyboard.keyCode < 255) {
         	printf("%li\n", ev.keyboard.keyCode);
        	}
       }

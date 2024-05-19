@@ -2,9 +2,10 @@
 #include <math.h>
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
-#include "keyboard.h"
-#include "termcui.h"
-#include "tui.h"
+
+// #include "keyboard.h"
+// #include "termcui.h"
+// #include "tui.h"
 #include "audio.h"
 
 ma_engine g_engine;
@@ -73,7 +74,7 @@ void stop_engine()
     ma_device_uninit(&g_device);
 }
 
-int start_engine(const char *file_path)
+int start_engine(const char *file_path, engine_loop callback)
 {
     ma_result result;
     ma_context context;
@@ -139,49 +140,13 @@ int start_engine(const char *file_path)
         play_sound();
     }
 
-    enter_raw_mode();
-    printf(ESC_HIDE_CURSOR);
     int end = sound_frame_length(g_sound);
-    char progress_bar[50];
-    while (1)
+    while(callback(g_sound, g_current_frame, end))
     {
-        if(!watch_key_press()) 
-        {
-            break;
-        }
-        if(ma_sound_at_end(&g_sound)) {
-            break;
-        }
-        if (g_current_frame >= end)
-        {
-            do_stop_sound();
-            break;
-        }
-        // Dodgy UI
-        int percent = (int)round(((float)g_current_frame / (float)end)*100);
-        printf(ESC_ERASE_LINE);
-        for(int i=0; i<50; i++)
-        {
-            if(i < (percent/2)) 
-            {
-                progress_bar[i] = '*';
-            }
-            else
-            {
-                progress_bar[i] = ' ';
-            }
-        }
-        printf("%3d%% [%s]\n", percent, progress_bar);
-        printf(ESC_CURSOR_UP, 1);
-        printf(ESC_CURSOR_BACKWARD, 57);
-        //
     }
 
 cleanup:
-    printf(ESC_ERASE_LINE);
-    printf(ESC_SHOW_CURSOR);
     stop_engine();
-    exit_raw_mode();
 
     return NO_ERROR;
 }
