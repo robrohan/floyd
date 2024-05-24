@@ -49,7 +49,7 @@ release_cli:
 package_debian: release_cli
 	mkdir -p ./dist/debian/floyd_cli/usr/bin
 	cp ./build/floyd ./dist/debian/floyd_cli/usr/bin/floyd
-	cd ./dist/debian; dpkg-deb --build floyd floyd_$(hash).deb
+	cd ./dist/debian; dpkg-deb --build floyd_cli floyd_cli_$(hash).deb
 
 run:
 	./build/floyd.debug ./test_data/The\ Llama\'s.mp3
