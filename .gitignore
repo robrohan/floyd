@@ -2,4 +2,5 @@
 *~
 
 build
-
+*.deb
+dist/debian/floyd_cli/usr/bin/floyd
