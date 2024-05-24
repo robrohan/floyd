@@ -1,0 +1,11 @@
+Package: floyd
+Version: 0.5
+Section: custom
+Priority: optional
+Architecture: amd64
+Essential: no
+Installed-Size: 850
+Depends: libc6:amd64
+Maintainer: Rob Rohan <rob@therohans.com>
+Homepage: https://therohans.com/floyd/index.html
+Description: Simple command line mp3, flac and wav player

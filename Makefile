@@ -3,6 +3,8 @@
 CC=gcc
 APP=floyd
 
+hash = $(shell git log --pretty=format:'%h' -n 1)
+
 clean:
 	rm -rf build
 
@@ -43,6 +45,11 @@ release_cli:
 	-I./vendor \
 	-I./src \
 	-o ./build/$(APP) -lm
+
+package_debian: release_cli
+	mkdir -p ./dist/debian/floyd/usr/bin
+	cp ./build/floyd ./dist/debian/floyd/usr/bin/floyd
+	cd ./dist/debian; dpkg-deb --build floyd
 
 run:
 	./build/floyd.debug ./test_data/The\ Llama\'s.mp3
