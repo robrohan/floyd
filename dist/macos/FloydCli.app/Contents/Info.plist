@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <plist version="1.0">
 <dict>
-<key>CFBundleExecutable</key>
-<string>FloydCli</string>
-<key>CFBundleGetInfoString</key>
-<string>FloydCli 1.0</string>
-<key>CFBundleVersion</key>
-<string>1.0</string>
-<key>CFBundleShortVersionString</key>
-<string>1.0</string>
+    <key>CFBundleExecutable</key>
+    <string>FloydCli</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.therohans.floydcli</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>FloydCli</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>CFBundleVersion</key>
+    <string>20</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>10.6</string>
+    <key>CFBundleGetInfoString</key>
+    <string>FloydCli 1.0</string>
+    <key>LSUIElement</key>
+    <true/>
+    <key>LSBackgroundOnly</key>
+    <true/>
 </dict>
 </plist>
