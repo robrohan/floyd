@@ -45,9 +45,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       
-    - name: make setup
-      run: mingw32-make setup
-      shell: cmd
+    # - name: make setup
+    #   run: mingw32-make setup
+    #   shell: cmd
       
     - name: make package_windows
       run: mingw32-make CC=gcc package_windows
