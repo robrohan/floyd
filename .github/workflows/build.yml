@@ -16,6 +16,11 @@ jobs:
         run: make CC=gcc package_debian
       # - name: Tiny Build
       #   run: ./configure --cc=gcc --enable-tiny; make clean qi
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: floyd_cli.deb
+          path: ${{ github.workspace }}/dist/debian/floyd_cli.deb
 
   macos:
     runs-on: macos-latest
@@ -26,3 +31,11 @@ jobs:
       #   run: ./configure --cc=clang; make test; ./build/run_tests
       - name: Build
         run: make CC=clang package_macos
+      - name: Zipping App File
+        run: |
+          tar -cvf ${{ github.workspace }}/dist/macos/FloydCli.app.tar -C ${{ github.workspace }}/dist/macos .
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+           name: FloydCli.app.tar
+           path: ${{ github.workspace }}/dist/macos/FloydCli.app.tar
