@@ -22,7 +22,6 @@ build_cli:
 		./src/main_cli.c \
 	-I./vendor \
 	-I./src \
-	
 	-o ./build/$(APP).debug -lm
 
 build_gui:
