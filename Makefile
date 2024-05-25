@@ -50,21 +50,21 @@ release_cli:
 	-I./src \
 	-o ./build/$(APP) -lm
 
-release_windows_cli:
-	mkdir -p ./build
-
-	$(CC) -O2 \
-	-Wl,--allow-multiple-definition \
-	-pthread -lopengl32 -lgdi32 -lwinmm \
-	-mwindows -static \
-		./src/tui.c \
-		./src/audio.c \
-		./src/log.c \
-		./src/keyboard.c \
-		./src/main_cli.c \
-	-I./vendor \
-	-I./src \
-	-o ./build/$(APP).exe -lm
+# windows cli doesn't work
+# release_windows_cli:
+# 	mkdir -p ./build
+# 	$(CC) -O2 \
+# 	-Wl,--allow-multiple-definition \
+# 	-pthread -lopengl32 -lgdi32 -lwinmm \
+# 	-mwindows -static \
+# 		./src/tui.c \
+# 		./src/audio.c \
+# 		./src/log.c \
+# 		./src/keyboard.c \
+# 		./src/main_cli.c \
+# 	-I./vendor \
+# 	-I./src \
+# 	-o ./build/$(APP).exe -lm
 
 package_debian: release_cli
 	mkdir -p ./dist/debian/floyd_cli/usr/bin
@@ -74,8 +74,9 @@ package_debian: release_cli
 package_macos: release_cli
 	cp ./build/floyd ./dist/macos/FloydCli.app/Contents/MacOS/FloydCli
 
-package_windows: release_windows_cli
-	cp ./build/floyd.exe ./dist/windows/floyd.exe
+# windows cli doesn't work
+# package_windows: release_windows_cli
+# 	cp ./build/floyd.exe ./dist/windows/floyd.exe
 
 run:
 	./build/floyd.debug ./test_data/The\ Llama\'s.mp3
