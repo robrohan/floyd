@@ -24,6 +24,7 @@ int load_sound(const char *file_path)
         printf("Failed to start playback engine.\n");
         return ERROR;
     }
+    return NO_ERROR;
 }
 
 int play_sound()

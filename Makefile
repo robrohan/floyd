@@ -51,5 +51,8 @@ package_debian: release_cli
 	cp ./build/floyd ./dist/debian/floyd_cli/usr/bin/floyd
 	cd ./dist/debian; dpkg-deb --build floyd_cli floyd_cli_$(hash).deb
 
+package_macos: release_cli
+	cp ./build/floyd ./dist/macos/FloydCli.app/Contents/MacOS/FloydCli
+
 run:
 	./build/floyd.debug ./test_data/The\ Llama\'s.mp3
