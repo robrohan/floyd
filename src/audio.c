@@ -3,9 +3,6 @@
 #define MINIAUDIO_IMPLEMENTATION
 #include "miniaudio.h"
 
-// #include "keyboard.h"
-// #include "termcui.h"
-// #include "tui.h"
 #include "audio.h"
 
 ma_engine g_engine;
@@ -14,26 +11,26 @@ ma_device g_device;
 
 int g_current_frame = 0;
 
-#define ERROR 1
-#define NO_ERROR 0
+#define FL_ERROR 1
+#define FL_NO_ERROR 0
 
 int load_sound(const char *file_path)
 {
     if (ma_sound_init_from_file(&g_engine, file_path, 0, NULL, NULL, &g_sound) != MA_SUCCESS)
     {
         printf("Failed to start playback engine.\n");
-        return ERROR;
+        return FL_ERROR;
     }
-    return NO_ERROR;
+    return FL_NO_ERROR;
 }
 
 int play_sound()
 {
     if (ma_sound_start(&g_sound) != MA_SUCCESS)
     {
-        return ERROR;
+        return FL_ERROR;
     }
-    return NO_ERROR;
+    return FL_NO_ERROR;
 }
 
 /////////////////////////////////////////////////////
@@ -127,7 +124,7 @@ int start_engine(const char *file_path, engine_loop callback)
     result = ma_engine_init(&engine_config, &g_engine);
     if (result != MA_SUCCESS)
     {
-        return ERROR;
+        return FL_ERROR;
     }
 
     if (file_path != NULL)
@@ -149,7 +146,7 @@ int start_engine(const char *file_path, engine_loop callback)
 cleanup:
     stop_engine();
 
-    return NO_ERROR;
+    return FL_NO_ERROR;
 }
 
 /////////////////////////////////////////////////////
