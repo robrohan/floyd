@@ -1,6 +1,6 @@
 .PHONY: build
 
-CC=gcc
+CC=clang
 APP=floyd
 
 hash = $(shell git log --pretty=format:'%h' -n 1)
@@ -22,6 +22,7 @@ build_cli:
 		./src/main_cli.c \
 	-I./vendor \
 	-I./src \
+	
 	-o ./build/$(APP).debug -lm
 
 build_gui:
@@ -40,6 +41,7 @@ release_cli:
 	mkdir -p ./build
 
 	$(CC) -O2 \
+	-arch x86_64 -arch arm64 \
 		./src/tui.c \
 		./src/audio.c \
 		./src/log.c \
