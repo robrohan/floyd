@@ -40,11 +40,12 @@ jobs:
            name: FloydCli.app.tar
            path: ${{ github.workspace }}/dist/macos/FloydCli.app.tar
 
-  windows:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
+  # windows cli doesn't work
+  # windows:
+  #   runs-on: windows-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
     
-    - name: make package_windows
-      run: mingw32-make CC=gcc package_windows
-      shell: cmd
+  #   - name: make package_windows
+  #     run: mingw32-make CC=gcc package_windows
+  #     shell: cmd
