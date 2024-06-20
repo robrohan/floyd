@@ -1,7 +1,7 @@
 #ifndef H_FLOYD_KEYBOARD
 #define H_FLOYD_KEYBOARD
 
-int watch_key_press();
+int watch_key_press(void);
 
 enum special_keys
 {

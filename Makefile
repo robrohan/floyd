@@ -3,6 +3,12 @@
 CC=clang
 APP=floyd
 
+C_ERRS += -Wall -Wextra -Wpedantic \
+		-Wformat=2 -Wno-unused-parameter -Wshadow \
+		-Wwrite-strings -Wstrict-prototypes -Wold-style-definition \
+		-Wredundant-decls -Wnested-externs -Wmissing-include-dirs \
+		-Wno-unused
+
 hash = $(shell git log --pretty=format:'%h' -n 1)
 
 clean:
@@ -11,30 +17,18 @@ clean:
 	rm -f dist/debian/floyd_cli/usr/bin/floyd
 	rm -f dist/macos/FloydCli.app/Contents/MacOS/FloydCli
 
-build_cli:
+build:
 	mkdir -p ./build
 
-	$(CC) -ggdb \
+	$(CC) $(C_ERRS) -O2 -std=c99 \
 		./src/tui.c \
 		./src/audio.c \
 		./src/log.c \
 		./src/keyboard.c \
-		./src/main_cli.c \
+		./src/main.c \
 	-I./vendor \
 	-I./src \
 	-o ./build/$(APP).debug -lm
-
-build_gui:
-	mkdir -p ./build
-
-	$(CC) -ggdb \
-		./src/audio.c \
-		./src/log.c \
-		./src/keyboard.c \
-		./src/main_gui.c \
-	-I./vendor \
-	-I./src \
-	-o ./build/$(APP).gui.debug -lm
 
 release_cli:
 	mkdir -p ./build
@@ -45,7 +39,7 @@ release_cli:
 		./src/audio.c \
 		./src/log.c \
 		./src/keyboard.c \
-		./src/main_cli.c \
+		./src/main.c \
 	-I./vendor \
 	-I./src \
 	-o ./build/$(APP) -lm

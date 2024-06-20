@@ -13,7 +13,7 @@
 
 struct termios org_termios;
 
-void exit_raw_mode()
+void exit_raw_mode(void)
 {
     if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &org_termios) == -1)
     {
@@ -21,7 +21,7 @@ void exit_raw_mode()
     }
 }
 
-void enter_raw_mode()
+void enter_raw_mode(void)
 {
     printf(ESC_SET_ATTRIBUTE_MODE_1, 0);
 

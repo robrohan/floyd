@@ -50,17 +50,11 @@ CmdDef commands[] =
     CMD_DEF_END,
 };
 
-int key_read()
+int key_read(void)
 {
     int nread;
     char c;
     nread = read(STDIN_FILENO, &c, 1);
-    // while ((nread = read(STDIN_FILENO, &c, 1)) != 1)
-    // {
-    //     if (nread == -1 && errno != EAGAIN)
-    //         panic(__LINE__, "%i: read error", errno);
-    // }
-
     // handle escape sequences
     if (c == '\x1b')
     {
@@ -143,7 +137,7 @@ int watch_key_press()
     {
         if(d->key == c) 
         {
-            void (*fn)() = d->func;
+            void (*fn)(void) = d->func;
             (*fn)();
         }
         d++;
