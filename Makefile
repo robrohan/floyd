@@ -20,7 +20,7 @@ clean:
 build:
 	mkdir -p ./build
 
-	$(CC) $(C_ERRS) -O2 -std=c99 \
+	$(CC) $(C_ERRS) -ggdb -O2 -std=c99 \
 		./src/tui.c \
 		./src/audio.c \
 		./src/log.c \
@@ -33,8 +33,7 @@ build:
 release_cli:
 	mkdir -p ./build
 
-	$(CC) -O2 \
-	-arch x86_64 -arch arm64 \
+	$(CC) -O2 -std=c99 \
 		./src/tui.c \
 		./src/audio.c \
 		./src/log.c \
@@ -71,6 +70,3 @@ package_macos: release_cli
 # windows cli doesn't work
 # package_windows: release_windows_cli
 # 	cp ./build/floyd.exe ./dist/windows/floyd.exe
-
-run:
-	./build/floyd.debug ./test_data/The\ Llama\'s.mp3
