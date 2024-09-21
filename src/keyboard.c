@@ -129,7 +129,7 @@ int key_read(void)
     }
 }
 
-int watch_key_press()
+int watch_key_press(void)
 {
     int c = key_read();
     CmdDef *d = commands;

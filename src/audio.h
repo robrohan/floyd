@@ -5,6 +5,9 @@
 
 int sound_frame_length(ma_sound sound);
 
+int play_sound(void);
+void stop_engine(void);
+
 void do_play_sound(void);
 void do_stop_sound(void);
 void do_rewind_sound(void);

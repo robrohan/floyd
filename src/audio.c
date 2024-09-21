@@ -24,7 +24,7 @@ int load_sound(const char *file_path)
     return FL_NO_ERROR;
 }
 
-int play_sound()
+int play_sound(void)
 {
     if (ma_sound_start(&g_sound) != MA_SUCCESS)
     {
@@ -65,7 +65,7 @@ void data_callback(ma_device *pDevice, void *pOutput, const void *pInput, ma_uin
     // printf("%i\n\r", g_current_frame);
 }
 
-void stop_engine()
+void stop_engine(void)
 {
     ma_engine_uninit(&g_engine);
     ma_sound_uninit(&g_sound);
@@ -151,12 +151,12 @@ cleanup:
 
 /////////////////////////////////////////////////////
 
-void do_play_sound()
+void do_play_sound(void)
 {
     play_sound();
 }
 
-void do_stop_sound()
+void do_stop_sound(void)
 {
     if (ma_sound_is_playing(&g_sound))
     {
@@ -164,13 +164,13 @@ void do_stop_sound()
     }
 }
 
-void do_rewind_sound()
+void do_rewind_sound(void)
 {
     ma_sound_seek_to_pcm_frame(&g_sound, 0);
     g_current_frame = 0;
 }
 
-void do_seek_backward()
+void do_seek_backward(void)
 {
     int seekPoint = milliseconds_to_frames(500.0);
     g_current_frame -= seekPoint;
@@ -181,7 +181,7 @@ void do_seek_backward()
     ma_sound_seek_to_pcm_frame(&g_sound, g_current_frame);
 }
 
-void do_seek_forward()
+void do_seek_forward(void)
 {
     do_stop_sound();
 
