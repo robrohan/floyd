@@ -33,13 +33,18 @@ will you please install the skill from here: https://raw.githubusercontent.com/r
 
 ![ask claude code to install the skill via URL](doc/install.png)
 
-Then if you ask it to play some sounds, if you do not have the binary installed it will try to download the binary and put it in your path:
+Then when you ask it to play some sounds, if you do not have the binary installed, Claude will try to download the binary and put it in your PATH:
 
 ![installing the binary for your platform](doc/binary.png)
+
+If that doesn't work, just ask it for help.
 
 And finally, it can play folders of files in the background if you just ask it to:
 
 ![Play a directory of music in the background](doc/loop.png)
+
+
+🎶🎵d(^_^)b🎵🎶
 
 
 ## Building
