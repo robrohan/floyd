@@ -1,5 +1,8 @@
 .PHONY: build
 
+-include .env
+export
+
 CC=clang
 APP=floyd
 
@@ -64,8 +67,46 @@ package_debian: release_cli
 	cp ./build/floyd ./dist/debian/floyd_cli/usr/bin/floyd
 	cd ./dist/debian; dpkg-deb --build floyd_cli floyd_cli.deb
 
-package_macos: release_cli
-	cp ./build/floyd ./dist/macos/FloydCli.app/Contents/MacOS/FloydCli
+release_mac_cli:
+	mkdir -p ./build
+
+	clang -target arm64-apple-macos11 -O2 -std=c99 \
+		./src/tui.c \
+		./src/audio.c \
+		./src/log.c \
+		./src/keyboard.c \
+		./src/main.c \
+	-I./vendor \
+	-I./src \
+	-o ./build/$(APP)-arm64 -lm
+
+	clang -target x86_64-apple-macos10.15 -O2 -std=c99 \
+		./src/tui.c \
+		./src/audio.c \
+		./src/log.c \
+		./src/keyboard.c \
+		./src/main.c \
+	-I./vendor \
+	-I./src \
+	-o ./build/$(APP)-x86_64 -lm
+
+	lipo -create ./build/$(APP)-arm64 ./build/$(APP)-x86_64 -output ./build/$(APP)
+
+sign:
+	codesign --sign "$(DEVELOPER_ID)" --force --options runtime ./build/$(APP)
+
+notarize:
+	ditto -c -k --keepParent ./build/$(APP) ./build/$(APP).zip
+	xcrun notarytool submit ./build/$(APP).zip \
+		--apple-id "$(APPLE_ID)" \
+		--password "$(APPLE_APP_PASSWORD)" \
+		--team-id "$(TEAM_ID)" \
+		--wait
+	rm ./build/$(APP).zip
+
+package_macos: release_mac_cli sign notarize
+	mkdir -p ./dist/macos
+	cp ./build/$(APP) ./dist/macos/$(APP)
 
 # windows cli doesn't work
 # package_windows: release_windows_cli

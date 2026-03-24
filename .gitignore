@@ -1,9 +1,10 @@
 .DS_Store
+.env
 *~
 
 test_data/example.*
 
 build
 *.deb
-dist/debian/floyd_cli/usr/bin/floyd
-dist/macos/FloydCli.app/Contents/MacOS/FloydCli
+dist/
+
