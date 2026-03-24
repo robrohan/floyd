@@ -50,21 +50,25 @@ kill $(cat /tmp/floyd.pid) && rm /tmp/floyd.pid
 
 ---
 
-### If the user wants to start playback (argument is a file path):
+### If the user wants to start playback (argument is a file or directory path):
 
-1. If `$ARGUMENTS` is empty, ask the user which file they want to play.
-2. Verify the file exists and has a supported extension (`.mp3`, `.wav`, `.flac`). If not, tell the user and stop.
-3. If `/tmp/floyd.pid` exists, stop any currently playing audio first:
+1. If `$ARGUMENTS` is empty, ask the user which file or directory they want to play.
+2. If `/tmp/floyd.pid` exists, stop any currently playing audio first:
 
 ```bash
 kill $(cat /tmp/floyd.pid) 2>/dev/null; rm -f /tmp/floyd.pid
 ```
 
-4. Start floyd in headless mode in the background and save the PID:
+3. **floyd only accepts a single file at a time** — never pass a directory path to floyd directly.
+   - If the argument is a **single file**, play it directly:
+     ```bash
+     (floyd -d "$ARGUMENTS") &
+     echo $! > /tmp/floyd.pid
+     ```
+   - If the argument is a **directory**, find all supported files recursively and play them one by one in a loop:
+     ```bash
+     (find "$ARGUMENTS" -type f \( -iname "*.mp3" -o -iname "*.wav" -o -iname "*.flac" \) | sort | while read f; do floyd -d "$f"; done) &
+     echo $! > /tmp/floyd.pid
+     ```
 
-```bash
-floyd -d $ARGUMENTS &
-echo $! > /tmp/floyd.pid
-```
-
-5. Tell the user what is playing and that they can stop it with `/floyd stop`.
+4. Tell the user what is playing and that they can stop it with `/floyd stop`.
