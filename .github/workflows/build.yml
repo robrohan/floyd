@@ -8,19 +8,8 @@ on:
       - 'v*'
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            artifact_name: floyd-linux-amd64
-          - os: macos-13
-            artifact_name: floyd-macos-x86_64
-          - os: macos-latest
-            artifact_name: floyd-macos-arm64
-
-    runs-on: ${{ matrix.os }}
-
+  build-linux:
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -29,16 +18,44 @@ jobs:
         run: make CC=clang release_cli
 
       - name: Stage artifact
-        run: mkdir -p ./dist/${{ matrix.artifact_name }} && cp ./build/floyd ./dist/${{ matrix.artifact_name }}/floyd
+        run: mkdir -p ./dist/floyd-linux-amd64 && cp ./build/floyd ./dist/floyd-linux-amd64/floyd
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.artifact_name }}
-          path: ./dist/${{ matrix.artifact_name }}/floyd
+          name: floyd-linux-amd64
+          path: ./dist/floyd-linux-amd64/floyd
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Build arm64
+        run: |
+          make CC="clang -target arm64-apple-macos11" release_cli
+          cp ./build/floyd ./build/floyd-arm64
+
+      - name: Build x86_64
+        run: |
+          make CC="clang -target x86_64-apple-macos10.15" release_cli
+          cp ./build/floyd ./build/floyd-x86_64
+
+      - name: Create universal binary
+        run: |
+          lipo -create ./build/floyd-arm64 ./build/floyd-x86_64 -output ./build/floyd
+          mkdir -p ./dist/floyd-macos-universal
+          cp ./build/floyd ./dist/floyd-macos-universal/floyd
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: floyd-macos-universal
+          path: ./dist/floyd-macos-universal/floyd
 
   release:
-    needs: build
+    needs: [build-linux, build-macos]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     permissions:
