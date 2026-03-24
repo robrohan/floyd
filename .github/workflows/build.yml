@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build
-        run: make CC=clang release_cli
+        run: make CC="clang -D_GNU_SOURCE" release_cli
 
       - name: Stage artifact
         run: mkdir -p ./dist/floyd-linux-amd64 && cp ./build/floyd ./dist/floyd-linux-amd64/floyd

@@ -1,7 +1,8 @@
 #include "audio.h"
+#include <getopt.h>
 #include <math.h>
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 #include "keyboard.h"
@@ -61,27 +62,50 @@ int headless_loop(ma_sound g_sound, int g_current_frame, int end)
     return 1;
 }
 
+static void usage(void)
+{
+    printf("Usage: floyd [-d] [-h] <file>\n");
+    printf("\n");
+    printf("  <file>            Audio file to play (.mp3, .wav, .flac)\n");
+    printf("\n");
+    printf("Options:\n");
+    printf("  -d, --headless    Play without TUI (suitable for non-interactive use)\n");
+    printf("  -h, --help        Show this help message\n");
+}
+
+static struct option long_opts[] = {
+    { "headless", no_argument, NULL, 'd' },
+    { "help",     no_argument, NULL, 'h' },
+    { NULL,       0,           NULL,  0  },
+};
+
 int main(int argc, char **argv)
 {
     int headless = 0;
-    const char *file_path = NULL;
+    int opt;
 
-    for (int i = 1; i < argc; i++)
+    while ((opt = getopt_long(argc, argv, "dh", long_opts, NULL)) != -1)
     {
-        if (strcmp(argv[i], "--headless") == 0)
+        switch (opt)
         {
+        case 'd':
             headless = 1;
-        }
-        else
-        {
-            file_path = argv[i];
+            break;
+        case 'h':
+            usage();
+            return 0;
+        default:
+            usage();
+            return 1;
         }
     }
 
+    const char *file_path = argv[optind];
+
     if (file_path == NULL)
     {
-        printf("No input file.\n");
-        return -1;
+        usage();
+        return 1;
     }
 
     if (headless)
