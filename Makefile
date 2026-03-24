@@ -1,5 +1,8 @@
 .PHONY: build
 
+-include .env
+export
+
 CC=clang
 APP=floyd
 
@@ -64,7 +67,18 @@ package_debian: release_cli
 	cp ./build/floyd ./dist/debian/floyd_cli/usr/bin/floyd
 	cd ./dist/debian; dpkg-deb --build floyd_cli floyd_cli.deb
 
-package_macos: release_cli
+sign:
+	codesign --sign "$(DEVELOPER_ID)" --force --options runtime ./build/$(APP)
+
+notarize:
+	xcrun notarytool submit ./build/$(APP) \
+		--apple-id "$(APPLE_ID)" \
+		--password "$(APPLE_APP_PASSWORD)" \
+		--team-id "$(TEAM_ID)" \
+		--wait
+	xcrun stapler staple ./build/$(APP)
+
+package_macos: release_cli sign notarize
 	cp ./build/floyd ./dist/macos/FloydCli.app/Contents/MacOS/FloydCli
 
 # windows cli doesn't work
