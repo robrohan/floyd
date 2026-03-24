@@ -58,7 +58,7 @@ jobs:
           path: ./dist/floyd-macos-universal/floyd
 
   release:
-    needs: [build-linux, build-macos]
+    needs: [build-linux]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     permissions:
